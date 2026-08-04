@@ -1,10 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <title>Onam AR</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <script/aframe.io/releases/1.5.0/aframe.min.jsscript>
+  <script src="https://cdn.jsdelivr.net/npm//dist/mindar-image-aframe.prod.jsscript>
 </head>
+
 <body>
-  <h1>Test Page Working</h1>
+  <a-scene
+    mindar-image="imageTargetSrc: targets.mind;"
+    color-space="sRGB"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false">
+
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+  </a-scene>
 </body>
 </html>
