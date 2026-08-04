@@ -1,34 +1,91 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Leafing AR</title>
 
-  <script src=jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image.prod.jsscript>
+  https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image.prod.jsscript>
   <script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
-  <script src="https://cdn.jsdelivrm/mind-ar-js@1.2.5/dist/mindar-image-aframe.prod.jsscript>
+  https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image-aframe.prod.jsscript>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: black;
+    }
+
+    #status {
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      z-index: 9999;
+      background: rgba(0, 0, 0, 0.75);
+      color: white;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
+  <div id="status">Loading AR...</div>
 
-<a-scene
-  mindar-image="imageTargetSrc: ./targets.mind;"
-  vr-mode-ui="enabled: false"
-  device-orientation-permission-ui="enabled: false">
+  <a-scene
+    mindar-image="imageTargetSrc: ./targets.mind;"
+    color-space="sRGB"
+    renderer="colorManagement: true, physicallyCorrectLights"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false"
+    embedded
+  >
+    <a-assets>
+      ./feast.png
+    </a-assets>
 
-  <a-camera position="0 0 0"
-            look-controls="enabled: false">
-  </a-camera>
+    <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 
-  <a-entity mindar-image-target="targetIndex: 0">
-    <a-plane
-      color="red"
-      width="1"
-      height="0.6">
-    </a-plane>
-  </a-entity>
+    <a-entity mindar-image-target="targetIndex: 0">
+      #feast</a-plane>
+    </a-entity>
+  </a-scene>
 
-</a-scene>
+  <script>
+    const statusBox = document.getElementById("status");
+    const scene = document.querySelector("a-scene");
+    const target = document.querySelector("[mindar-image-target]");
 
+    scene.addEventListener("loaded", function () {
+      statusBox.innerText = "Allow camera access, then point at the banana leaf.";
+    });
+
+    scene.addEventListener("arReady", function () {
+      statusBox.innerText = "Point camera at the banana leaf.";
+    });
+
+    scene.addEventListener("arError", function () {
+      statusBox.innerText = "AR error. Check camera permission or targets.mind file.";
+    });
+
+    target.addEventListener("targetFound", function () {
+      statusBox.innerText = "Leaf detected. Feast loading...";
+      setTimeout(function () {
+        statusBox.style.display = "none";
+      }, 1500);
+    });
+
+    target.addEventListener("targetLost", function () {
+      statusBox.style.display = "block";
+      statusBox.innerText = "Point camera back at the banana leaf.";
+    });
+  </script>
 </body>
 </html>
